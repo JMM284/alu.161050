@@ -62,4 +62,6 @@ for csv_file in csv_files:
     print(f"\nMostrando las primeras filas de: {csv_file}")
     df = pd.read_csv(file_path)
     print(df.head())
+    print(df.info())
+    print(df.describe())
     print(df.isnull().sum())
