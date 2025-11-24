@@ -52,10 +52,14 @@ import pandas as pd
 
 downloads = r"C:\Users\jorge\OneDrive\Escritorio\3 Curso AI-IF\alu.161050\Ejercicio 1"
 
+# Se crea una lista con todos los archivos en la carpeta 'downloads' que terminen en ".csv"
 csv_files = [f for f in os.listdir(downloads) if f.endswith(".csv")]
+
+# Si no se encontraron archivos CSV, se muestra un mensaje y el programa se detiene
 if not csv_files:
     print("No hay archivos CSV en 'downloads/'")
     exit()
+
     
 for csv_file in csv_files:
     file_path = os.path.join(downloads, csv_file)
