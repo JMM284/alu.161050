@@ -75,8 +75,8 @@ def apply_format_rules(text: str):
     formatted_text = text
 
     formatted_text = remove_email_sentences(formatted_text)
-
-    # Asumiendo que MAPPING es un dict de {patrón: reemplazo}
+    
+    
     if MAPPING:
         for key, value in MAPPING.items():
             formatted_text = re.sub(
@@ -97,7 +97,7 @@ def main():
 
     cleaned = 0
     
-    # Normalizar rutas de E/S para reemplazo robusto
+    # Normalizar rutas de E/S para reemplazo correcto
     norm_input_dir = os.path.normpath(INPUT_DIRECTORY)
     norm_output_dir = os.path.normpath(OUTPUT_DIRECTORY)
 
@@ -106,7 +106,7 @@ def main():
     log.info(f"Found {len(all_files)} files to process.")
 
     for file_path in all_files:
-        # CORRECCIÓN CLAVE para evitar rutas duplicadas 
+        # CORRECCIÓN para evitar rutas duplicadas 
         if norm_output_dir in file_path or CATALOG_DIRECTORY in file_path:
             log.info(f"Skipping non-song/already processed file: {file_path}")
             continue
@@ -126,14 +126,13 @@ def main():
             log.info(f"Empty or too small tab. Skipping: {file_path}")
             continue
             
-        # Formatting of the text goes in that function call
+
         formatted_text = apply_format_rules(text)
 
         # Crear la ruta de salida reemplazando la base de entrada por la de salida
         output_file = file_path.replace(norm_input_dir, norm_output_dir, 1)
         
-        # CORRECCIÓN PREVIA: Usamos os.path.dirname y os.path.basename para manejar rutas de forma segura en cualquier SO.
-        dir = os.path.dirname(output_file)
+        # Corregido para que funcione en windows
         file_name = os.path.basename(output_file)
         
 

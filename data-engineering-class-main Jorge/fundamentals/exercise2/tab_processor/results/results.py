@@ -1,5 +1,3 @@
-# results.py
-
 import os
 
 # Carpetas a analizar

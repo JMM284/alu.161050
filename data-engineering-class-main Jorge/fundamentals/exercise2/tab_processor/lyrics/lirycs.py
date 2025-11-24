@@ -5,9 +5,9 @@ import datetime
 
 # --- Configuración de Rutas ---
 INPUT_DIRECTORY = os.path.normpath("./files/")
-# Directorio de LECTURA: Archivos crudos (songs/)
+# Directorio de LECTURA: Archivos de songs 
 SONGS_INPUT_DIRECTORY = os.path.join(INPUT_DIRECTORY, "songs")
-# Directorio de ESCRITURA: Resultados separados (lyrics/)
+# Directorio de ESCRITURA: Resultados separados 
 LYRICS_OUTPUT_DIRECTORY = os.path.join(INPUT_DIRECTORY, "lyrics") 
 LOGS_DIRECTORY = os.path.normpath("./logs/")
 
@@ -24,7 +24,7 @@ log.basicConfig(
 )
 logger = log.getLogger(__name__)
 
-# --- Lógica de Remoción y Separación ---
+
 
 def is_chord_line(line: str) -> bool:
     """
@@ -38,11 +38,11 @@ def is_chord_line(line: str) -> bool:
     if re.search(r'^[-=|#]*$', line):
         return True
     
-    # Contar letras minúsculas (indicador de letra de canción)
+    # Contar letras minúsculas 
     lowercase_count = len(re.findall(r'[a-záéíóúüñ]', line))
     
     if lowercase_count < 4 and len(line) > 1:
-        # Si la proporción de mayúsculas (acordes) es alta
+        # Si la proporción de acordes es alta
         uppercase_count = len(re.findall(r'[A-Z]', line))
         if uppercase_count > lowercase_count:
              return True
@@ -63,7 +63,7 @@ def extract_lyrics_and_chords(tab_content: str) -> tuple[str, str]:
         else:
             lyrics_lines.append(line)
             
-    # Limpieza final de la letra: unir líneas y eliminar saltos dobles al inicio/final
+    # Limpieza final de la letra: unir líneas y eliminar saltos dobles al inicio y al final
     final_lyrics = '\n'.join(lyrics_lines)
     final_lyrics = re.sub(r'\n{2,}', '\n\n', final_lyrics).strip()
 
@@ -83,7 +83,7 @@ def process_songs(input_path: str, output_path: str):
     
     songs_count = 0
     
-    # 1. Crear el directorio de salida (files/lyrics) si no existe
+    # 1. Crear el directorio de salida en files llamdo lyrics si no existe
     if not os.path.exists(output_path):
         os.makedirs(output_path, exist_ok=True)
         log.info(f"Output Directory CREATED: {output_path}")
@@ -98,7 +98,7 @@ def process_songs(input_path: str, output_path: str):
             file_path = os.path.join(root, file_name)
             
             try:
-                # Lectura del archivo crudo de songs/
+                # Lectura del archivo songs
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
                 
@@ -107,28 +107,28 @@ def process_songs(input_path: str, output_path: str):
                 
                 # --- Construcción de la nueva ruta de salida en 'files/lyrics' ---
                 
-                # Determinar el subdirectorio relativo (e.g., 'a' o 'abel_pintos')
+                # Determinar el subdirectorio 
                 relative_dir = os.path.relpath(root, input_path)
                 output_dir = os.path.join(output_path, relative_dir)
                 
-                # Crear el subdirectorio si no existe
+                # Crear el subdirectorio si no existe 
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir, exist_ok=True)
                 
-                # Nombre base del archivo (e.g., 'cancion' de 'cancion.txt')
+                # Nombre base del archivo 
                 base_name, _ = os.path.splitext(file_name) 
 
-                # 2. Guardar el archivo de solo Letra (e.g., cancion.lyrics)
+                # 2. Guardar el archivo de solo Letra  por ejemplo cancion.lyrics
                 lyrics_file_path = os.path.join(output_dir, base_name + ".lyrics")
                 with open(lyrics_file_path, "w", encoding="utf-8") as out_f:
                     out_f.write(lyrics)
                 
-                # 3. Guardar el archivo de solo Acordes (e.g., cancion.chords)
+                # 3. Guardar el archivo de solo Acordes por ejemplo cancion.chords
                 chords_file_path = os.path.join(output_dir, base_name + ".chords")
                 with open(chords_file_path, "w", encoding="utf-8") as out_f:
                     out_f.write(chords)
                 
-                # --- Fin Lógica de Guardado ---
+                
                 
                 songs_count += 1
                 print(f"Processed: {os.path.join(relative_dir, base_name)}. Wrote .lyrics and .chords.")

@@ -36,7 +36,7 @@ def validate_song_format(song):
     else:
         return False
 
-#Nueva validacion añadida
+# Nueva validacion de canciones añadida 
 def validate_song_additional(song): 
     """Additional validation: at least 5 lines.""" 
     MIN_LINES = 5 
@@ -47,7 +47,7 @@ def validate_song_additional(song):
 def list_files_recursive(path: str = "."):
     """Lists all files in a directory recursively."""
     for entry in os.listdir(path):
-        full_path = os.path.join(path, entry) # modificado
+        full_path = os.path.join(path, entry) # modificado para que funcione en windows
         if os.path.isdir(full_path):
             list_files_recursive(full_path)
         else:
@@ -67,7 +67,7 @@ def list_files_recursive(path: str = "."):
     ),
 )
 def main(init):
-    log.basicConfig(level=log.INFO, format='%(asctime)s - %(levelname)s - %(message)s') # modificado
+    log.basicConfig(level=log.INFO, format='%(asctime)s - %(levelname)s - %(message)s') # modificado para que funcione en windows
     # Start time tracking
     start_time = datetime.datetime.now()
     log.info(f"Validator started at {start_time}")
@@ -86,45 +86,46 @@ def main(init):
     for file_path in list_files_recursive(CLEANED_DIRECTORY):
 
         text = str()
-        try: # modificado
-            with open(file_path, "r", encoding="utf-8") as file: # modificado
+        # modificado para que funicione
+        try: 
+            with open(file_path, "r", encoding="utf-8") as file: 
                 text = file.read()
-        except Exception as e: # modificado
-            log.error(f"Error reading file {file_path}: {e}") # modificado
-            continue # modificado
+        except Exception as e:
+            log.error(f"Error reading file {file_path}: {e}") 
+            continue 
 
         # Formatting of the text goes in that function call
-        validated = validate_song_format(text) and validate_song_additional(text)  # modificado
+        validated = validate_song_format(text) and validate_song_additional(text)  # # modificado para que funicione con la nueva validacion
 
-        base_output_dir = OUTPUT_DIRECTORY_OK if validated else OUTPUT_DIRECTORY_KO # modificado
+        base_output_dir = OUTPUT_DIRECTORY_OK if validated else OUTPUT_DIRECTORY_KO # # modificado para que funicione
         
         if validated:
             OK += 1
         else:
             KO += 1
-
-        try: # modificado
-            relative_path = os.path.relpath(file_path, CLEANED_DIRECTORY) # modificado
-        except ValueError as e: # modificado
-            log.error(f"Could not get relative path for {file_path}: {e}") # modificado
-            continue # modificado
+        # modificado para que funicione
+        try: 
+            relative_path = os.path.relpath(file_path, CLEANED_DIRECTORY) 
+        except ValueError as e: 
+            log.error(f"Could not get relative path for {file_path}: {e}")
+            continue 
             
-        output_file = os.path.join(base_output_dir, relative_path) # modificado
+        output_file = os.path.join(base_output_dir, relative_path) 
         
-        dir_path = os.path.dirname(output_file) # modificado
-        file_name = os.path.basename(output_file) # modificado
+        dir_path = os.path.dirname(output_file) # modificado que funcione en windows
+        file_name = os.path.basename(output_file) # modificado que funcione en windows  
 
         # Creates the path if not exists
-        if not os.path.exists(dir_path): # modificado
-            os.makedirs(dir_path, exist_ok=True) # modificado
-            print("OKs = ", OK, "-- KOs = ", KO, "--", dir_path, " CREATED!!") # modificado
-
-        try: # modificado
-            with open(output_file, "w", encoding="utf-8") as file: # modificado
+        if not os.path.exists(dir_path): # modificado que funcione en windows
+            os.makedirs(dir_path, exist_ok=True) # modificado que funcione en windows
+            print("OKs = ", OK, "-- KOs = ", KO, "--", dir_path, " CREATED!!") # modificado que funcione en windows
+        # modificado para que funicione
+        try: 
+            with open(output_file, "w", encoding="utf-8") as file: 
                 file.write(text)
                 print("OKs = ", OK, "-- KOs = ", KO, "--", file_name, " CREATED!!")
-        except Exception as e: # modificado
-            log.error(f"Error writing file {output_file}: {e}") # modificado
+        except Exception as e: 
+            log.error(f"Error writing file {output_file}: {e}") 
 
     log.info(f"OKs = {OK}, -- KOs = {KO}, --")
     end_time = datetime.datetime.now()
@@ -139,8 +140,3 @@ def main(init):
 if __name__ == "__main__":
     main()
 
-# def validate_song_additional(song):
-#     """Additional validation: at least 5 lines."""
-#     MIN_LINES = 5
-#     lines = song.strip().split("\n")
-#     return len(lines) >= MIN_LINES
