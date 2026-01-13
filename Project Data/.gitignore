@@ -1,0 +1,10 @@
+# Datos descargados 
+Processed_data/
+
+# Archivos de Python temporales
+__pycache__/
+*.pyc
+
+# Logs y entornos virtuales
+pipeline.log
+.venv/
